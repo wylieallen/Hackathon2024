@@ -46,7 +46,7 @@ def get_data(card, save_images=False, save_dir=None):
         return
 
     try:
-        text = card.find_element(by=By.XPATH, value='.//div[2]/div[2]/div[1]').text
+        text = card.find_element(by=By.XPATH, value='.//div[@data-testid="tweetText"]').text
     except:
         text = ""
 
@@ -231,7 +231,7 @@ def get_last_date_from_csv(path):
     return datetime.datetime.strftime(max(pd.to_datetime(df["Timestamp"])), '%Y-%m-%dT%H:%M:%S.000Z')
 
 
-def log_in(driver, env, timeout=20, wait=4):
+def log_in(driver, env, timeout=20, wait=2):
     email = get_email(env)  # const.EMAIL
     password = get_password(env)  # const.PASSWORD
     username = get_username(env)  # const.USERNAME
@@ -242,7 +242,7 @@ def log_in(driver, env, timeout=20, wait=4):
     password_xpath = '//input[@autocomplete="current-password"]'
     username_xpath = '//input[@data-testid="ocfEnterTextTextInput"]'
 
-    sleep(random.uniform(wait, wait + 1))
+    sleep(random.uniform(4, 5))
 
     # enter email
     email_el = driver.find_element(by=By.XPATH, value=email_xpath)
@@ -285,7 +285,7 @@ def keep_scroling(driver, data, writer, tweet_ids, scrolling, tweet_parsed, limi
             tweet = get_data(card, save_images, save_images_dir)
             if tweet:
                 # check if the tweet is unique
-                tweet_id = ''.join(tweet[:-2])
+                tweet_id = tweet[-1]
                 if tweet_id not in tweet_ids:
                     tweet_ids.add(tweet_id)
                     data.append(tweet)
